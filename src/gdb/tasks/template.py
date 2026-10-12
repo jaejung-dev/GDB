@@ -661,7 +661,7 @@ class LayoutRetrieval(BaseBenchmark):
         return [t for t in tokens if len(t) >= 15 and t.isalnum()]
 
     def evaluate(self, predictions, ground_truth):
-        ranked = [p if isinstance(p, list) else [] for p in predictions]
+        ranked = [list(dict.fromkeys(p)) if isinstance(p, list) else [] for p in predictions]
         return {
             "mrr": _mean_reciprocal_rank(ranked, ground_truth),
             "map": _mean_average_precision(ranked, ground_truth),

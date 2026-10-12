@@ -237,6 +237,8 @@ class OpenAIBatchRunner:
         jsonl_lines: List[str] = []
         for req in requests:
             content: List[dict] = []
+            if req.model_input.text:
+                content.append({"type": "text", "text": req.model_input.text})
             for img in req.model_input.images:
                 url = _to_url(
                     img, self.bucket, job_prefix, self.credentials_path
@@ -244,8 +246,6 @@ class OpenAIBatchRunner:
                 content.append(
                     {"type": "image_url", "image_url": {"url": url}}
                 )
-            if req.model_input.text:
-                content.append({"type": "text", "text": req.model_input.text})
 
             body: dict = {
                 "model": self.model_id,
